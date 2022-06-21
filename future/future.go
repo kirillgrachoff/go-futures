@@ -33,13 +33,12 @@ func Async[T any](worker func() (T, error)) Future[T] {
     return future
 }
 
-func (f Future[T]) Get() (any, error) {
+func (f Future[T]) Get() (value T, err error) {
 	select {
-	case value := <-f.value:
-		return value, nil
-	case err := <-f.errors:
-		return nil, err
+	case value = <-f.value:
+	case err = <-f.errors:
 	}
+    return
 }
 
 func (f Future[T]) GetUnsafe() T {
